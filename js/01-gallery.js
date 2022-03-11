@@ -1,55 +1,49 @@
-import { galleryItems } from "./gallery-items.js";
+import { galleryItems } from './gallery-items.js';
 // Change code below this line
 
-const listGallery = document.querySelector(".gallery");
-let instance;
+const galleryRef = document.querySelector('.gallery');
 
 const markup = galleryItems
     .map(({ preview, original, description }) => {
         return `<div class="gallery__item">
-        <a class="gallery__link" href="${original}">
-            <img
-                class="gallery__image"
-                src="${preview}"
-                data-source="${original}"
-                alt="${description}"
-            />
-        </a>
-    </div>`;
+                <a class="gallery__link" href="${original}">
+                <img
+                    class="gallery__image"
+                    src="${preview}"
+                    data-source="${original}"
+                    alt="${description}"
+                />
+                </a>
+            </div>`;
     })
-    .join("");
+    .join('');
 
-listGallery.insertAdjacentHTML("afterbegin", markup);
-listGallery.addEventListener("click", onModalOpen);
+galleryRef.insertAdjacentHTML('afterbegin', markup);
 
-function onModalOpen(e) {
+let instance;
+
+const openModal = e => {
     e.preventDefault();
 
-    const dataSource = e.target.dataset.source;
-
-    if (!dataSource) {
+    if (e.target.tagName !== 'IMG') {
         return;
     }
 
-    window.addEventListener("keydown", onEscCloseModal);
+    window.addEventListener('keydown', closeModal);
 
-    instance = basicLightbox.create(
-        `
-        <img src="${dataSource}" width="800" height="600">
-    `
-    );
+    const dataSrc = e.target.dataset.source;
+
+    instance = basicLightbox.create(`
+        <img src="${dataSrc}"/>`);
 
     instance.show();
-}
+};
 
-function onEscCloseModal(e) {
-    if (e.code === "Escape") {
+galleryRef.addEventListener('click', openModal);
+
+function closeModal(e) {
+    if (e.code === 'Escape') {
+        window.removeEventListener('keydown', closeModal);
         instance.close();
-        onRemoveLisetener();
-        return;
     }
-}
-
-function onRemoveLisetener() {
-    window.removeEventListener("keydown", onEscCloseModal);
 }
