@@ -20,7 +20,7 @@ const markup = galleryItems
 
 galleryRef.insertAdjacentHTML("afterbegin", markup);
 
-let instance = 0;
+let instance = basicLightbox.create(`<img src=''/>`);
 
 function openModal(e) {
     e.preventDefault();
@@ -33,9 +33,7 @@ function openModal(e) {
 
     const dataSet = e.target.dataset.source;
 
-    instance = basicLightbox.create(`
-        <img src="${dataSet}"/>
-    `);
+    instance.element().querySelector("img").src = dataSet;
 
     instance.show();
 }
